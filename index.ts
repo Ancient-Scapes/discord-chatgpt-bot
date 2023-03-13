@@ -14,7 +14,7 @@ const options :ClientOptions = {
 const client = new Client(options);
 
 client.on(Events.MessageCreate, async (message) => {
-  if (message.mentions.users.first()?.username !== "おば") return;
+  if (message.mentions.users.first()?.username !== process.env.BOT_USER_NAME) return;
 
   try {
     message.channel.sendTyping();
