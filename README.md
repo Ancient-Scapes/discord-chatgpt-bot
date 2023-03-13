@@ -1,6 +1,7 @@
 # discord-chatgpt-bot
 
 Discord Botを通してChatGPT APIを実行し、チャンネルに投稿します。
+`npm run dev` をローカルで実行中にBotが反応します。
 
 ## Environments
 
@@ -23,3 +24,5 @@ API_KEY=xxx
 npm i
 npm run dev
 ```
+
+![image](https://user-images.githubusercontent.com/18649842/224736640-b6541a04-a1f4-4c4a-811a-620e44028868.png)
