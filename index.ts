@@ -14,13 +14,11 @@ const options :ClientOptions = {
 const client = new Client(options);
 
 client.on(Events.MessageCreate, async (message) => {
-  // チャンネルに特定の単語が含まれている場合にBotが返信する
-  if (message.content.indexOf("おば、") === -1) return;
+  if (message.mentions.users.first()?.username !== "おば") return;
 
   try {
-    // 質問に不必要な単語を切り取ってAPI実行
-    const str = message.content.substring(2, message.content.length);
-    const text = await chatCompletion(str);
+    message.channel.sendTyping();
+    const text = await chatCompletion(requestStr(message.content));
     if (!text) throw Error(text);
 
     await message.channel.send(text);
@@ -34,4 +32,7 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.login(process.env.BOT_TOKEN);
+
+// mention部分のtextを削除し、本文のみでAPIにリクエストする
+const requestStr = (str: string) => str.substring(str.indexOf(">"), str.length);
 
