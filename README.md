@@ -12,6 +12,7 @@ Discord Botを通してChatGPT APIを実行し、チャンネルに投稿しま�
 .env
 
 ```zsh
+BOT_USER_NAME=Botユーザ名
 BOT_TOKEN=xxx
 API_KEY=xxx
 ```
