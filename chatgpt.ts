@@ -8,7 +8,7 @@ export const chatCompletion = async (
     messages: [
       {
         role: "user",
-        content: message,
+        content: process.env.SECRET_PROMPT_FRONT + message,
       },
     ],
   });
@@ -23,8 +23,9 @@ export const chatCompletion = async (
   });
 
   const data: any = await res.json();
+  console.log(data.choices[0].message);
   const choice = 0;
 
-  return data.choices[choice].message;
+  return data.choices[choice].message.content;
 };
 
