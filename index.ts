@@ -21,19 +21,7 @@ client.on(Events.MessageCreate, async (message) => {
     const text = await chatCompletion(requestStr(message.content));
     if (!text) throw Error(text);
 
-    const textArray = text.split("\n");
-    let sendText = textArray[textArray.length - 1];
-
-    if (sendText.indexOf("：") !== -1) {
-      sendText = requestStr(sendText, "：");
-      sendText = sendText.replace("：", "");
-    }
-
-    if (sendText.indexOf("「") === 1) {
-      sendText = sendText.replace(/[\u300c\u300d]/g, "");
-    }
-
-    await message.channel.send(sendText);
+    await message.channel.send(text);
   } catch (error) {
     console.log(error);
   }
