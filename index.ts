@@ -26,13 +26,11 @@ client.on(Events.MessageCreate, async (message) => {
 
     await message.channel.send(text);
   } catch (error) {
+    message.channel.send(process.env.ERROR_MESSAGE ?? "");
+    message.channel.send(typeof Error);
+
     if (error instanceof TypeError) {
-      message.channel.send(process.env.ERROR_MESSAGE ?? "");
-      message.channel.send(typeof Error);
       message.channel.send(error.message);
-    } else {
-      message.channel.send(process.env.ERROR_MESSAGE ?? "");
-      message.channel.send(typeof error);
     }
     console.log(error);
   }
