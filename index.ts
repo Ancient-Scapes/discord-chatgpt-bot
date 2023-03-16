@@ -18,11 +18,22 @@ client.on(Events.MessageCreate, async (message) => {
 
   try {
     message.channel.sendTyping();
+    const startTime = new Date().getTime();
+
     const text = await chatCompletion(requestStr(message.content));
     if (!text) throw Error(text);
+    console.log(`処理時間: ${new Date().getTime() - startTime}ms`);
 
     await message.channel.send(text);
   } catch (error) {
+    if (error instanceof TypeError) {
+      message.channel.send(process.env.ERROR_MESSAGE ?? "");
+      message.channel.send(typeof Error);
+      message.channel.send(error.message);
+    } else {
+      message.channel.send(process.env.ERROR_MESSAGE ?? "");
+      message.channel.send(typeof error);
+    }
     console.log(error);
   }
 });

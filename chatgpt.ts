@@ -1,5 +1,8 @@
 import fetch from "cross-fetch";
 
+const startPrompt = process.env.SECRET_PROMPT_START ?? "";
+const endPrompt = process.env.SECRET_PROMPT_END ?? "";
+
 export const chatCompletion = async (
   message: string
 ): Promise<string | undefined> => {
@@ -8,7 +11,7 @@ export const chatCompletion = async (
     messages: [
       {
         role: "user",
-        content: message,
+        content: startPrompt + message + endPrompt,
       },
     ],
   });
