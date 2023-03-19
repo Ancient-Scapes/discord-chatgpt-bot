@@ -25,12 +25,15 @@ client.on(Events.MessageCreate, async (message) => {
     console.log(`処理時間: ${new Date().getTime() - startTime}ms`);
 
     await message.channel.send(text);
-  } catch (error) {
+  } catch (error: any) {
     message.channel.send(process.env.ERROR_MESSAGE ?? "");
-    message.channel.send(typeof Error);
 
     if (error instanceof TypeError) {
-      message.channel.send(error.message);
+      message.channel.send("TypeError");
+    } else if (error.name === "AbortError") {
+      message.channel.send("AbortError: タイムアウトしたやで〜");
+    } else {
+      message.channel.send("Unknown Error");
     }
     console.log(error);
   }

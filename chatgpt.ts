@@ -2,6 +2,7 @@ import fetch from "cross-fetch";
 
 const startPrompt = process.env.SECRET_PROMPT_START ?? "";
 const endPrompt = process.env.SECRET_PROMPT_END ?? "";
+const controller = new AbortController();
 
 export const chatCompletion = async (
   message: string
@@ -16,6 +17,7 @@ export const chatCompletion = async (
     ],
   });
 
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -23,7 +25,11 @@ export const chatCompletion = async (
       "Authorization": `Bearer ${process.env.API_KEY}`,
     },
     body,
+    signal: controller.signal,
   });
+  clearTimeout(timeoutId);
+
+  if (!res.ok) throw Error(res.statusText);
 
   const data: any = await res.json();
   const choice = 0;
