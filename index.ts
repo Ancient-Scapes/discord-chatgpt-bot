@@ -29,12 +29,13 @@ client.on(Events.MessageCreate, async (message) => {
     message.channel.send(process.env.ERROR_MESSAGE ?? "");
 
     if (error instanceof TypeError) {
-      message.channel.send("TypeError");
+      message.channel.send("TypeErrorやで、なんかAPIがおかしいわ");
     } else if (error.name === "AbortError") {
-      message.channel.send("AbortError: タイムアウトしたやで〜");
+      message.channel.send("AbortErrorやで、20秒以上たったかAPIサーバがおかしいわ");
     } else {
-      message.channel.send("Unknown Error");
+      message.channel.send("しらんErrorやで");
     }
+    message.channel.send(JSON.stringify(error));
     console.log(error);
   }
 });
