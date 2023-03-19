@@ -1,6 +1,7 @@
 /* eslint-disable-next-line */
 require("dotenv").config();
 
+import { DateTime } from 'luxon';
 import {Client, ClientOptions, Events, GatewayIntentBits} from "discord.js";
 import {chatCompletion} from "./chatgpt";
 
@@ -17,13 +18,13 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.mentions.users.first()?.username !== process.env.BOT_USER_NAME) return;
 
   try {
+    const startTime = DateTime.now();
     message.channel.sendTyping();
-    const startTime = new Date().getTime();
 
     const text = await chatCompletion(requestStr(message.content));
     if (!text) throw Error(text);
-    console.log(`処理時間: ${new Date().getTime() - startTime}ms`);
 
+    logProcessTime(startTime);
     await message.channel.send(text);
   } catch (error: any) {
     message.channel.send(process.env.ERROR_MESSAGE ?? "");
@@ -49,3 +50,12 @@ client.login(process.env.BOT_TOKEN);
 // mention部分のtextを削除し、本文のみでAPIにリクエストする
 const requestStr = (str: string) => str.substring(str.indexOf(">"), str.length);
 
+// 処理時間出力
+const logProcessTime = (startTime: DateTime) => {
+  const endTime = DateTime.now();
+  const formattedDiff = endTime.diff(startTime, "milliseconds").as("seconds").toFixed(2);
+  const formattedTime = endTime.toFormat("MM/dd HH:mm:ss");
+
+  // 処理時間を出力する
+  console.log(`[${formattedTime}] 処理時間: ${formattedDiff}秒`);
+};
