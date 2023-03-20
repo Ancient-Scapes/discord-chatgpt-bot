@@ -2,7 +2,6 @@ import fetch from "cross-fetch";
 
 const startPrompt = process.env.SECRET_PROMPT_START ?? "";
 const endPrompt = process.env.SECRET_PROMPT_END ?? "";
-let controller = new AbortController();
 
 export const chatCompletion = async (
   message: string
@@ -17,6 +16,7 @@ export const chatCompletion = async (
     ],
   });
 
+  let controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000);
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
