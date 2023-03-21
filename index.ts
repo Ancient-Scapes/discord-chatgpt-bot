@@ -1,61 +1,38 @@
 /* eslint-disable-next-line */
 require("dotenv").config();
+import {Client, ClientOptions, Events, GatewayIntentBits, Message} from "discord.js";
+import {readFile} from "fs/promises";
 
-import { DateTime } from 'luxon';
-import {Client, ClientOptions, Events, GatewayIntentBits} from "discord.js";
-import {chatCompletion} from "./chatgpt";
+import {AuthToken, Bot} from "./types";
+import {messageCreateHandler} from "./messageCreateHandler";
 
-const options :ClientOptions = {
+const options: ClientOptions = {
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
 };
-const client = new Client(options);
 
-client.on(Events.MessageCreate, async (message) => {
-  if (message.mentions.users.first()?.username !== process.env.BOT_USER_NAME) return;
-
-  try {
-    const startTime = DateTime.now();
-    message.channel.sendTyping();
-
-    const text = await chatCompletion(requestStr(message.content));
-    if (!text) throw Error(text);
-
-    logProcessTime(startTime);
-    await message.channel.send(text);
-  } catch (error: any) {
-    message.channel.send(process.env.ERROR_MESSAGE ?? "");
-
-    if (error instanceof TypeError) {
-      message.channel.send("TypeErrorやで、なんかAPIがおかしいわ");
-    } else if (error.name === "AbortError") {
-      message.channel.send("AbortErrorやで、20秒以上たったかAPIサーバがおかしいわ");
-    } else {
-      message.channel.send("しらんErrorやで");
-    }
-    message.channel.send(JSON.stringify(error));
-    console.log(error);
-  }
-});
-
-client.once(Events.ClientReady, (c) => {
-  console.log(`Ready! Logged in as ${c.user.tag}`);
-});
-
-client.login(process.env.BOT_TOKEN);
-
-// mention部分のtextを削除し、本文のみでAPIにリクエストする
-const requestStr = (str: string) => str.substring(str.indexOf(">"), str.length);
-
-// 処理時間出力
-const logProcessTime = (startTime: DateTime) => {
-  const endTime = DateTime.now();
-  const formattedDiff = endTime.diff(startTime, "milliseconds").as("seconds").toFixed(2);
-  const formattedTime = endTime.toFormat("MM/dd HH:mm:ss");
-
-  // 処理時間を出力する
-  console.log(`[${formattedTime}] 処理時間: ${formattedDiff}秒`);
+const readAuthTokens = async (): Promise<AuthToken[]> => {
+  const data = await readFile("./auth.json", "utf-8");
+  return JSON.parse(data).tokens;
 };
+
+const initBots = async () => {
+  const tokens: AuthToken[] = await readAuthTokens();
+  const bots: Bot[] = tokens.map((token) => {
+    return {
+      token: token.discordToken,
+      client: new Client(options),
+    };
+  });
+
+  bots.forEach(async (bot, i) => {
+    await bot.client.login(bot.token);
+    console.log(`Logged in as ${bot.client.user?.tag}`);
+    bot.client.on(Events.MessageCreate, (m: Message) => messageCreateHandler(m, tokens[i]));
+  });
+};
+
+initBots().catch((error) => console.error(error));

@@ -1,17 +1,15 @@
 import fetch from "cross-fetch";
-
-const startPrompt = process.env.SECRET_PROMPT_START ?? "";
-const endPrompt = process.env.SECRET_PROMPT_END ?? "";
+import {AuthToken} from "./types";
 
 export const chatCompletion = async (
-  message: string
+  prompt: string, bot: AuthToken
 ): Promise<string | undefined> => {
   const body = JSON.stringify({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "user",
-        content: startPrompt + message + endPrompt,
+        content: bot.promptStart + prompt + bot.promptEnd,
       },
     ],
   });

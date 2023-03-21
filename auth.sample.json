@@ -1,0 +1,18 @@
+{
+  "tokens": [
+    {
+      "discordToken": "YOUR_DISCORD_BOT_TOKEN_1_HERE",
+      "botName": "YOUR_BOT_NAME_1_HERE",
+      "promptStart": "YOUR_PROMPT_START_TOKEN_1_HERE",
+      "promptEnd": "YOUR_PROMPT_END_TOKEN_1_HERE",
+      "errorMessage": "YOUR_ERROR_MESSAGE_1_HERE"
+    },
+    {
+      "discordToken": "YOUR_DISCORD_BOT_TOKEN_2_HERE",
+      "botName": "YOUR_BOT_NAME_2_HERE",
+      "promptStart": "YOUR_PROMPT_START_TOKEN_2_HERE",
+      "promptEnd": "YOUR_PROMPT_END_TOKEN_2_HERE",
+      "errorMessage": "YOUR_ERROR_MESSAGE_2_HERE"
+    }
+  ]
+}
