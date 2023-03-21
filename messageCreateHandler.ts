@@ -1,9 +1,9 @@
 import {DateTime} from "luxon";
 import {Message} from "discord.js";
 import {chatCompletion} from "./chatgpt";
-import {AuthToken} from "./types";
+import {BotEnv} from "./types";
 
-export const messageCreateHandler = async (message: Message, bot: AuthToken) => {
+export const messageCreateHandler = async (message: Message, bot: BotEnv) => {
   if (message.mentions.users.first()?.username !== bot.name) return;
 
   try {

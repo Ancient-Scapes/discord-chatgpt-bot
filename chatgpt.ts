@@ -1,8 +1,8 @@
 import fetch from "cross-fetch";
-import {AuthToken} from "./types";
+import {BotEnv} from "./types";
 
 export const chatCompletion = async (
-  prompt: string, bot: AuthToken
+  prompt: string, bot: BotEnv
 ): Promise<string | undefined> => {
   const body = JSON.stringify({
     model: "gpt-3.5-turbo",

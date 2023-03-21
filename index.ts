@@ -3,7 +3,7 @@ require("dotenv").config();
 import {Client, ClientOptions, Events, GatewayIntentBits, Message} from "discord.js";
 import {readFile} from "fs/promises";
 
-import {AuthToken, Bot} from "./types";
+import {BotEnv, Bot} from "./types";
 import {messageCreateHandler} from "./messageCreateHandler";
 
 const options: ClientOptions = {
@@ -14,13 +14,13 @@ const options: ClientOptions = {
   ],
 };
 
-const readAuthTokens = async (): Promise<AuthToken[]> => {
+const readAuthTokens = async (): Promise<BotEnv[]> => {
   const data = await readFile("./auth.json", "utf-8");
   return JSON.parse(data).tokens;
 };
 
 const initBots = async () => {
-  const tokens: AuthToken[] = await readAuthTokens();
+  const tokens: BotEnv[] = await readAuthTokens();
   const bots: Bot[] = tokens.map((token) => {
     return {
       token: token.discordToken,

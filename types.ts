@@ -1,6 +1,6 @@
 import {Client} from "discord.js";
 
-export type AuthToken = {
+export type BotEnv = {
   discordToken: string;
   name: string;
   promptStart: string;
