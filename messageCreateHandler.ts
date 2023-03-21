@@ -4,7 +4,7 @@ import {chatCompletion} from "./chatgpt";
 import {AuthToken} from "./types";
 
 export const messageCreateHandler = async (message: Message, bot: AuthToken) => {
-  if (message.mentions.users.first()?.username !== bot.botName) return;
+  if (message.mentions.users.first()?.username !== bot.name) return;
 
   try {
     const startTime = DateTime.now();
@@ -13,7 +13,7 @@ export const messageCreateHandler = async (message: Message, bot: AuthToken) => 
     const text = await chatCompletion(requestStr(message.content), bot);
     if (!text) throw Error(text);
 
-    logProcessTime(startTime, bot.botName);
+    logProcessTime(startTime, bot.name);
     await message.channel.send(text);
   } catch (error: any) {
     message.channel.send(bot.errorMessage ?? "");

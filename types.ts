@@ -2,7 +2,7 @@ import {Client} from "discord.js";
 
 export type AuthToken = {
   discordToken: string;
-  botName: string;
+  name: string;
   promptStart: string;
   promptEnd: string;
   errorMessage: string;
